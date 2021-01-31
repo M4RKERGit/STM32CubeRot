@@ -4,7 +4,7 @@
 #include "camera.h"
 
 typedef struct {
-  void  (*Resume)(int* xOld, int* yOld, int* zOld);
+  void  (*Resume)();
   void  (*Pause)(void);
 } cOpenGL_DemoTypedef;
 

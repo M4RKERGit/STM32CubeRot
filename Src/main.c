@@ -169,12 +169,9 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  int xOld = 0;
-  int yOld = 0;
-  int zOld = 0;
   while (1)
   {
-	  cOpenGL_Examples[m_DemoId].Resume(&xOld, &yOld, &zOld);
+	  cOpenGL_Examples[m_DemoId].Resume();
 
     /* USER CODE END WHILE */
 

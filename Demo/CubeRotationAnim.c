@@ -17,6 +17,12 @@ static const Camera* m_Camera;
 static const vec3 x_turn = {1, 0, 0};
 static const vec3 y_turn = {0, 1, 0};
 static const vec3 z_turn = {0, 0, 1};
+int xDiff;
+int yDiff;
+int zDiff;
+int xOld;
+int yOld;
+int zOld;
 static uint32_t m_lastTick;
 static uint8_t m_isActive;
 static int xAxis, yAxis, zAxis;
@@ -77,7 +83,9 @@ float data[3];
 int x = 0;
 int y = 0;
 int z = 0;
-void CubeRotationAnim_Resume(int* xOld, int* yOld, int* zOld) {
+
+
+void CubeRotationAnim_Resume() {
 	if (!m_isActive) {
 		FrameHandler_Reset();
 		m_isActive = 1;
@@ -99,35 +107,55 @@ void CubeRotationAnim_Resume(int* xOld, int* yOld, int* zOld) {
 	BSP_LCD_DisplayStringAt(0,50,(uint8_t *)buf1,LEFT_MODE);
 	BSP_LCD_DisplayStringAt(0,70,(uint8_t *)buf2,LEFT_MODE);
 
-	int xDiff = xAxis - *xOld;
-	int yDiff = yAxis - *yOld;
-	int zDiff = zAxis - *zOld;
+	xDiff = xAxis - xOld;
+	yDiff = yAxis - yOld;
+	zDiff = zAxis - zOld;
+
+	snprintf(buf, sizeof buf, "X %d", xDiff);
+    snprintf(buf1, sizeof buf1, "Y %d", yDiff);
+	snprintf(buf2, sizeof buf2, "Z %d", zDiff);
+
+	BSP_LCD_DisplayStringAt(100,30,(uint8_t *)buf,LEFT_MODE);
+	BSP_LCD_DisplayStringAt(100,50,(uint8_t *)buf1,LEFT_MODE);
+	BSP_LCD_DisplayStringAt(100,70,(uint8_t *)buf2,LEFT_MODE);
 
 	float turned;
 	float angle_rads;
 
-	turned = ((float)xDiff) / ROTANIM_DURATION_MS;
-	angle_rads = turned * M_PI;
-	quat_rotate(q, angle_rads, x_turn);
 
-	OpenGL_Cube_RotateLocal(&m_Cubes[0], q);
+	if (xDiff > 1 | xDiff < 1)
+	{
+		turned = ((float)xDiff) / ROTANIM_DURATION_MS;
+		angle_rads = turned * M_PI * 10;
+		quat_rotate(q, angle_rads, x_turn);
 
-
-	turned = ((float)yDiff) / ROTANIM_DURATION_MS;
-	angle_rads = turned * M_PI;
-	quat_rotate(q, angle_rads, y_turn);
-
-	OpenGL_Cube_RotateLocal(&m_Cubes[0], q);
+		OpenGL_Cube_RotateLocal(&m_Cubes[0], q);
+	}
 
 
-	turned = ((float)zDiff) / ROTANIM_DURATION_MS;
-	angle_rads = turned * M_PI;
-	quat_rotate(q, angle_rads, z_turn);
+	if (yDiff  > 1 | yDiff < 1)
+	{
+		turned = ((float)yDiff) / ROTANIM_DURATION_MS;
+		angle_rads = turned * M_PI * 10;
+		quat_rotate(q, angle_rads, y_turn);
 
-	OpenGL_Cube_RotateLocal(&m_Cubes[0], q);
+		OpenGL_Cube_RotateLocal(&m_Cubes[0], q);
+	}
+
+	if (zDiff  > 1 | zDiff < 1)
+	{
+		turned = ((float)zDiff) / ROTANIM_DURATION_MS;
+		angle_rads = turned * M_PI * 10;
+		quat_rotate(q, angle_rads, z_turn);
+
+		OpenGL_Cube_RotateLocal(&m_Cubes[0], q);
+	}
 
 
 	FrameHandler_DrawCube(m_Camera, &m_Cubes[0]);
 	FrameHandler_glFlush();
 	m_lastTick = curr;
+	xOld = xAxis;
+	yOld = yAxis;
+	zOld = zAxis;
 }
