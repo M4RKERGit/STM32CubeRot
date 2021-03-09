@@ -23,9 +23,23 @@ int zDiff;
 int xOld;
 int yOld;
 int zOld;
+uint32_t tickCounter;
+int colorCounter;
 static uint32_t m_lastTick;
 static uint8_t m_isActive;
 static int xAxis, yAxis, zAxis;
+
+
+static const uint32_t m_colors[CUBE_VERTEX_COUNT] = {
+		0xFFFF0000, // RED
+		0xFF00FF00, // GREEN
+		0xFF0000FF, // BLUE
+		0xFF00FFFF, // CYAN
+		0xFFFF00FF, // MAGENTA
+		0xFFFFFF00, // YELLOW
+		0xFFA52A2A, // BROWN
+		0xFFFFA500  // ORANGE
+};
 
 static inline float GetRandomFloat() {
 	return ((float)rand()) / RAND_MAX;
@@ -123,7 +137,7 @@ void CubeRotationAnim_Resume() {
 	float angle_rads;
 
 
-	if (xDiff > 1 | xDiff < 1)
+	if ((xDiff > 1) | (xDiff < -1))
 	{
 		turned = ((float)xDiff) / ROTANIM_DURATION_MS;
 		angle_rads = turned * M_PI * 10;
@@ -133,7 +147,7 @@ void CubeRotationAnim_Resume() {
 	}
 
 
-	if (yDiff  > 1 | yDiff < 1)
+	if ((yDiff  > 1) | (yDiff < -1))
 	{
 		turned = ((float)yDiff) / ROTANIM_DURATION_MS;
 		angle_rads = turned * M_PI * 10;
@@ -142,7 +156,7 @@ void CubeRotationAnim_Resume() {
 		OpenGL_Cube_RotateLocal(&m_Cubes[0], q);
 	}
 
-	if (zDiff  > 1 | zDiff < 1)
+	if ((zDiff  > 1) | (zDiff < -1))
 	{
 		turned = ((float)zDiff) / ROTANIM_DURATION_MS;
 		angle_rads = turned * M_PI * 10;
@@ -151,6 +165,21 @@ void CubeRotationAnim_Resume() {
 		OpenGL_Cube_RotateLocal(&m_Cubes[0], q);
 	}
 
+	tickCounter ++;
+
+	if (tickCounter > 10)
+	{
+		colorCounter ++;
+		if (colorCounter > 7)
+		{
+			colorCounter = 0;
+		}
+		tickCounter = 0;
+		for (int i = 0; i < 7; i++)
+		{
+			m_Cubes[0].colors[i] = m_colors[colorCounter];
+		}
+	}
 
 	FrameHandler_DrawCube(m_Camera, &m_Cubes[0]);
 	FrameHandler_glFlush();
