@@ -70,7 +70,7 @@ extern SDRAM_HandleTypeDef hsdram2;
 static __IO uint8_t m_DemoId = 0;
 
 cOpenGL_DemoTypedef cOpenGL_Examples[] = {
-	{CubeRotationAnim_Resume,  CubeRotationAnim_Pause},
+	{CubeRotationAnim_Resume,  CubeRotationAnim_Pause, CubeRotationAnim_SetNextColor},
 	{CubeTouchMe_Resume,       CubeTouchMe_Pause},
 };
 /* USER CODE END PV */
@@ -247,8 +247,8 @@ void SystemClock_Config(void)
   */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if (GPIO_Pin == KEY_BUTTON_PIN) {
-		cOpenGL_Examples[m_DemoId].Pause();
-		m_DemoId = (m_DemoId + 1) % (sizeof(cOpenGL_Examples) / sizeof(cOpenGL_Examples[0]));
+		cOpenGL_Examples[m_DemoId].SetNextColor();
+		//m_DemoId = (m_DemoId + 1) % (sizeof(cOpenGL_Examples) / sizeof(cOpenGL_Examples[0]));
 	}
 }
 

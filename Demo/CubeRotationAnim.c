@@ -10,7 +10,7 @@
 #include <math.h>
 
 #define ROTANIM_DURATION_MS 1000
-#define ROTANIM_CUBE_CNT 1
+#define ROTANIM_CUBE_CNT 4
 
 static Cube m_Cubes[ROTANIM_CUBE_CNT];
 static const Camera* m_Camera;
@@ -50,9 +50,9 @@ static inline float GetRandomFloatRange(float a_min, float b_max) {
 }
 
 static void GetRandomTranslation(vec3 tr) {
-	tr[0] = GetRandomFloatRange(0, 0);
-	tr[1] = GetRandomFloatRange(-0.5f, 0.5f);
-	tr[2] = GetRandomFloatRange(0, 0);
+	tr[0] = GetRandomFloatRange(-2.0f, 3.0f);
+	tr[1] = GetRandomFloatRange(-1.5f, 0.0f);
+	tr[2] = GetRandomFloatRange(-1.0f, 1.0f);
 }
 
 static void GetRandomRotation(quat rot) {
@@ -71,8 +71,10 @@ void CubeRotationAnim_Init(const Camera* camera) {
 	m_isActive = 0;
 
 	uint32_t i;
-	for (i = 0; i < ROTANIM_CUBE_CNT; ++i) {
-		float scale = GetRandomFloatRange(0.1f, 0.8f);
+
+	for (i = 0; i < ROTANIM_CUBE_CNT; i++)
+	{
+		float scale = GetRandomFloatRange(0.1f, 0.4f);
 		OpenGL_Cube_Init(&m_Cubes[i], scale);
 
 		quat rot;
@@ -141,9 +143,30 @@ void CubeRotationAnim_Resume() {
 	{
 		turned = ((float)xDiff) / ROTANIM_DURATION_MS;
 		angle_rads = turned * M_PI * 10;
-		quat_rotate(q, angle_rads, x_turn);
 
-		OpenGL_Cube_RotateLocal(&m_Cubes[0], q);
+		for (uint8_t i = 0; i < ROTANIM_CUBE_CNT; i++)
+		{
+			if (i == 0)
+			{
+				quat_rotate(q, angle_rads, x_turn);
+				OpenGL_Cube_RotateLocal(&m_Cubes[0], q);
+			}
+			if (i == 1)
+			{
+				quat_rotate(q, 2.0f * angle_rads, x_turn);
+				OpenGL_Cube_RotateLocal(&m_Cubes[1], q);
+			}
+			if (i == 2)
+			{
+				quat_rotate(q, 4.0f * angle_rads, x_turn);
+				OpenGL_Cube_RotateLocal(&m_Cubes[2], q);
+			}
+			if (i == 3)
+			{
+				quat_rotate(q, 6.0f * angle_rads, x_turn);
+				OpenGL_Cube_RotateLocal(&m_Cubes[3], q);
+			}
+		}
 	}
 
 
@@ -151,40 +174,125 @@ void CubeRotationAnim_Resume() {
 	{
 		turned = ((float)yDiff) / ROTANIM_DURATION_MS;
 		angle_rads = turned * M_PI * 10;
-		quat_rotate(q, angle_rads, y_turn);
-
-		OpenGL_Cube_RotateLocal(&m_Cubes[0], q);
+		for (uint8_t i = 0; i < ROTANIM_CUBE_CNT; i++)
+				{
+					if (i == 0)
+					{
+						quat_rotate(q, angle_rads, y_turn);
+						OpenGL_Cube_RotateLocal(&m_Cubes[0], q);
+					}
+					if (i == 1)
+					{
+						quat_rotate(q, 2.0f * angle_rads, y_turn);
+						OpenGL_Cube_RotateLocal(&m_Cubes[1], q);
+					}
+					if (i == 2)
+					{
+						quat_rotate(q, 4.0f * angle_rads, y_turn);
+						OpenGL_Cube_RotateLocal(&m_Cubes[2], q);
+					}
+					if (i == 3)
+					{
+						quat_rotate(q, 6.0f * angle_rads, y_turn);
+						OpenGL_Cube_RotateLocal(&m_Cubes[3], q);
+					}
+				}
 	}
 
 	if ((zDiff  > 1) | (zDiff < -1))
 	{
 		turned = ((float)zDiff) / ROTANIM_DURATION_MS;
 		angle_rads = turned * M_PI * 10;
-		quat_rotate(q, angle_rads, z_turn);
-
-		OpenGL_Cube_RotateLocal(&m_Cubes[0], q);
+		for (uint8_t i = 0; i < ROTANIM_CUBE_CNT; i++)
+				{
+					if (i == 0)
+					{
+						quat_rotate(q, angle_rads, z_turn);
+						OpenGL_Cube_RotateLocal(&m_Cubes[0], q);
+					}
+					if (i == 1)
+					{
+						quat_rotate(q, 2.0f * angle_rads, z_turn);
+						OpenGL_Cube_RotateLocal(&m_Cubes[1], q);
+					}
+					if (i == 2)
+					{
+						quat_rotate(q, 4.0f * angle_rads, z_turn);
+						OpenGL_Cube_RotateLocal(&m_Cubes[2], q);
+					}
+					if (i == 3)
+					{
+						quat_rotate(q, 6.0f * angle_rads, z_turn);
+						OpenGL_Cube_RotateLocal(&m_Cubes[3], q);
+					}
+				}
 	}
 
-	tickCounter ++;
-
-	if (tickCounter > 10)
-	{
-		colorCounter ++;
-		if (colorCounter > 7)
-		{
-			colorCounter = 0;
-		}
-		tickCounter = 0;
-		for (int i = 0; i < 7; i++)
-		{
-			m_Cubes[0].colors[i] = m_colors[colorCounter];
-		}
-	}
-
-	FrameHandler_DrawCube(m_Camera, &m_Cubes[0]);
-	FrameHandler_glFlush();
-	m_lastTick = curr;
 	xOld = xAxis;
 	yOld = yAxis;
 	zOld = zAxis;
+
+	for (uint8_t i = 0; i < ROTANIM_CUBE_CNT; i++)
+	{
+		FrameHandler_DrawCube(m_Camera, &m_Cubes[i]);
+	}
+
+	FrameHandler_glFlush();
+	m_lastTick = curr;
+}
+
+void CubeRotationAnim_SetNextColor()
+{
+	if (colorCounter == 8)
+			{
+				for (uint8_t j = 0; j < ROTANIM_CUBE_CNT; j++)
+				{
+					for (uint8_t i = 0; i < 7; i++)
+				{
+					m_Cubes[j].colors[i] = m_colors[i];
+				}
+				}
+				colorCounter = 0;
+				return;
+			}
+	for (uint8_t j = 0; j < ROTANIM_CUBE_CNT; j++)
+	{
+						if (j == 0)
+						{
+							uint8_t buff = colorCounter;
+							if (buff > 8)	buff = 0;
+							for (uint8_t i = 0; i < 7; i++)
+							{
+								m_Cubes[j].colors[i] = m_colors[buff];
+							}
+						}
+						if (j == 1)
+						{
+							uint8_t buff = colorCounter + 1;
+							if (buff > 8)	buff = 1;
+							for (uint8_t i = 0; i < 7; i++)
+							{
+								m_Cubes[j].colors[i] = m_colors[buff];
+							}
+						}
+						if (j == 2)
+						{
+							uint8_t buff = colorCounter + 2;
+							if (buff > 8)	buff = 2;
+							for (uint8_t i = 0; i < 7; i++)
+							{
+								m_Cubes[j].colors[i] = m_colors[buff];
+							}
+						}
+						if (j == 3)
+						{
+							uint8_t buff = colorCounter + 3;
+							if (buff > 8)	buff = 3;
+							for (uint8_t i = 0; i < 7; i++)
+							{
+								m_Cubes[j].colors[i] = m_colors[buff];
+							}
+						}
+	}
+	colorCounter ++;
 }

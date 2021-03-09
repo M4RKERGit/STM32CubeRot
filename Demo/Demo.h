@@ -6,11 +6,13 @@
 typedef struct {
   void  (*Resume)();
   void  (*Pause)(void);
+  void  (*SetNextColor)();
 } cOpenGL_DemoTypedef;
 
 void CubeRotationAnim_Init(const Camera* camera);
 void CubeRotationAnim_Resume();
 void CubeRotationAnim_Pause();
+void CubeRotationAnim_SetNextColor();
 
 void CubeTouchMe_Init(const Camera* camera);
 void CubeTouchMe_Resume();
