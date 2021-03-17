@@ -120,27 +120,27 @@ void CubeRotationAnim_Resume()
 	if (isShowing == 1)
 	{
 		snprintf(buf, sizeof buf, "400dpi");
-			BSP_LCD_DisplayStringAt(0, 300,(uint8_t *)buf,LEFT_MODE);
-			snprintf(buf, sizeof buf, "800");
-			BSP_LCD_DisplayStringAt(0, 117,(uint8_t *)buf,LEFT_MODE);
-			snprintf(buf, sizeof buf, "1600");
-			BSP_LCD_DisplayStringAt(0, 170,(uint8_t *)buf,LEFT_MODE);
-			snprintf(buf, sizeof buf, "2400");
-			BSP_LCD_DisplayStringAt(180, 220,(uint8_t *)buf,LEFT_MODE);
+		BSP_LCD_DisplayStringAt(0, 300,(uint8_t *)buf,LEFT_MODE);
+		snprintf(buf, sizeof buf, "800");
+		BSP_LCD_DisplayStringAt(0, 117,(uint8_t *)buf,LEFT_MODE);
+		snprintf(buf, sizeof buf, "1600");
+		BSP_LCD_DisplayStringAt(0, 170,(uint8_t *)buf,LEFT_MODE);
+		snprintf(buf, sizeof buf, "2400");
+		BSP_LCD_DisplayStringAt(180, 220,(uint8_t *)buf,LEFT_MODE);
 
-			snprintf(buf, sizeof buf, "X %d", xAxis);
-			BSP_LCD_DisplayStringAt(0,30,(uint8_t *)buf,LEFT_MODE);
-			snprintf(buf, sizeof buf, "Y %d", yAxis);
-			BSP_LCD_DisplayStringAt(0,50,(uint8_t *)buf,LEFT_MODE);
-			snprintf(buf, sizeof buf, "Z %d", zAxis);
-			BSP_LCD_DisplayStringAt(0,70,(uint8_t *)buf,LEFT_MODE);
+		snprintf(buf, sizeof buf, "X %d", xAxis);
+		BSP_LCD_DisplayStringAt(0,30,(uint8_t *)buf,LEFT_MODE);
+		snprintf(buf, sizeof buf, "Y %d", yAxis);
+		BSP_LCD_DisplayStringAt(0,50,(uint8_t *)buf,LEFT_MODE);
+		snprintf(buf, sizeof buf, "Z %d", zAxis);
+		BSP_LCD_DisplayStringAt(0,70,(uint8_t *)buf,LEFT_MODE);
 
-			snprintf(buf, sizeof buf, "X %d", xDiff);
-			BSP_LCD_DisplayStringAt(100,30,(uint8_t *)buf,LEFT_MODE);
-			snprintf(buf, sizeof buf, "Y %d", yDiff);
-			BSP_LCD_DisplayStringAt(100,50,(uint8_t *)buf,LEFT_MODE);
-			snprintf(buf, sizeof buf, "Z %d", zDiff);
-			BSP_LCD_DisplayStringAt(100,70,(uint8_t *)buf,LEFT_MODE);
+		snprintf(buf, sizeof buf, "X %d", xDiff);
+		BSP_LCD_DisplayStringAt(100,30,(uint8_t *)buf,LEFT_MODE);
+		snprintf(buf, sizeof buf, "Y %d", yDiff);
+		BSP_LCD_DisplayStringAt(100,50,(uint8_t *)buf,LEFT_MODE);
+		snprintf(buf, sizeof buf, "Z %d", zDiff);
+		BSP_LCD_DisplayStringAt(100,70,(uint8_t *)buf,LEFT_MODE);
 	}
 	BSP_GYRO_GetXYZ(data);
 
@@ -155,94 +155,59 @@ void CubeRotationAnim_Resume()
 	float turned;
 	float angle_rads;
 
-	if ((xDiff > 1) | (xDiff < -1))
-	{
-		turned = ((float)xDiff) / ROTANIM_DURATION_MS;
-		angle_rads = turned * M_PI * 10;
-
-		for (uint8_t i = 0; i < ROTANIM_CUBE_CNT; i++)
-		{
-			if (i == 0)
-			{
-				quat_rotate(q, angle_rads, x_turn);
-				OpenGL_Cube_RotateLocal(&m_Cubes[0], q);
-			}
-			if (i == 1)
-			{
-				quat_rotate(q, 2.0f * angle_rads, x_turn);
-				OpenGL_Cube_RotateLocal(&m_Cubes[1], q);
-			}
-			if (i == 2)
-			{
-				quat_rotate(q, 4.0f * angle_rads, x_turn);
-				OpenGL_Cube_RotateLocal(&m_Cubes[2], q);
-			}
-			if (i == 3)
-			{
-				quat_rotate(q, 6.0f * angle_rads, x_turn);
-				OpenGL_Cube_RotateLocal(&m_Cubes[3], q);
-			}
-		}
-	}
 
 
-	if ((yDiff  > 1) | (yDiff < -1))
-	{
-		turned = ((float)yDiff) / ROTANIM_DURATION_MS;
-		angle_rads = turned * M_PI * 10;
-		for (uint8_t i = 0; i < ROTANIM_CUBE_CNT; i++)
-				{
-					if (i == 0)
-					{
-						quat_rotate(q, angle_rads, y_turn);
-						OpenGL_Cube_RotateLocal(&m_Cubes[0], q);
-					}
-					if (i == 1)
-					{
-						quat_rotate(q, 2.0f * angle_rads, y_turn);
-						OpenGL_Cube_RotateLocal(&m_Cubes[1], q);
-					}
-					if (i == 2)
-					{
-						quat_rotate(q, 4.0f * angle_rads, y_turn);
-						OpenGL_Cube_RotateLocal(&m_Cubes[2], q);
-					}
-					if (i == 3)
-					{
-						quat_rotate(q, 6.0f * angle_rads, y_turn);
-						OpenGL_Cube_RotateLocal(&m_Cubes[3], q);
-					}
-				}
-	}
 
-	if ((zDiff  > 1) | (zDiff < -1))
-	{
-		turned = ((float)zDiff) / ROTANIM_DURATION_MS;
-		angle_rads = turned * M_PI * 10;
-		for (uint8_t i = 0; i < ROTANIM_CUBE_CNT; i++)
-				{
-					if (i == 0)
-					{
-						quat_rotate(q, angle_rads, z_turn);
-						OpenGL_Cube_RotateLocal(&m_Cubes[0], q);
-					}
-					if (i == 1)
-					{
-						quat_rotate(q, 2.0f * angle_rads, z_turn);
-						OpenGL_Cube_RotateLocal(&m_Cubes[1], q);
-					}
-					if (i == 2)
-					{
-						quat_rotate(q, 4.0f * angle_rads, z_turn);
-						OpenGL_Cube_RotateLocal(&m_Cubes[2], q);
-					}
-					if (i == 3)
-					{
-						quat_rotate(q, 6.0f * angle_rads, z_turn);
-						OpenGL_Cube_RotateLocal(&m_Cubes[3], q);
-					}
-				}
-	}
+	turned = ((float)xDiff) / ROTANIM_DURATION_MS;
+	angle_rads = turned * M_PI * 10;
+
+	quat_rotate(q, angle_rads, x_turn);		//поворот по x
+	OpenGL_Cube_RotateLocal(&m_Cubes[0], q);
+
+	quat_rotate(q, 2.0f * angle_rads, x_turn);
+	OpenGL_Cube_RotateLocal(&m_Cubes[1], q);
+
+	quat_rotate(q, 4.0f * angle_rads, x_turn);
+	OpenGL_Cube_RotateLocal(&m_Cubes[2], q);
+
+	quat_rotate(q, 6.0f * angle_rads, x_turn);
+	OpenGL_Cube_RotateLocal(&m_Cubes[3], q);
+
+
+
+
+	turned = ((float)yDiff) / ROTANIM_DURATION_MS;
+	angle_rads = turned * M_PI * 10;
+
+	quat_rotate(q, angle_rads, y_turn);		//поворот по y
+	OpenGL_Cube_RotateLocal(&m_Cubes[0], q);
+
+	quat_rotate(q, 2.0f * angle_rads, y_turn);
+	OpenGL_Cube_RotateLocal(&m_Cubes[1], q);
+
+	quat_rotate(q, 4.0f * angle_rads, y_turn);
+	OpenGL_Cube_RotateLocal(&m_Cubes[2], q);
+
+	quat_rotate(q, 6.0f * angle_rads, y_turn);
+	OpenGL_Cube_RotateLocal(&m_Cubes[3], q);
+
+
+
+
+	turned = ((float)zDiff) / ROTANIM_DURATION_MS;
+	angle_rads = turned * M_PI * 10;
+
+	quat_rotate(q, angle_rads, z_turn);		//поворот по z
+	OpenGL_Cube_RotateLocal(&m_Cubes[0], q);
+
+	quat_rotate(q, 2.0f * angle_rads, z_turn);
+	OpenGL_Cube_RotateLocal(&m_Cubes[1], q);
+
+	quat_rotate(q, 4.0f * angle_rads, z_turn);
+	OpenGL_Cube_RotateLocal(&m_Cubes[2], q);
+
+	quat_rotate(q, 6.0f * angle_rads, z_turn);
+	OpenGL_Cube_RotateLocal(&m_Cubes[3], q);
 
 	xOld = xAxis;
 	yOld = yAxis;
@@ -260,54 +225,54 @@ void CubeRotationAnim_SetNextColor()
 {
 	if (colorCounter == 8)
 			{
-				for (uint8_t j = 0; j < ROTANIM_CUBE_CNT; j++)
-				{
-					for (uint8_t i = 0; i < 7; i++)
-				{
-					m_Cubes[j].colors[i] = m_colors[i];
-				}
-				}
+			for (uint8_t j = 0; j < ROTANIM_CUBE_CNT; j++)
+			{
+				for (uint8_t i = 0; i < 7; i++)
+			{
+				m_Cubes[j].colors[i] = m_colors[i];
+			}
+			}
 				colorCounter = 0;
 				return;
 			}
 	for (uint8_t j = 0; j < ROTANIM_CUBE_CNT; j++)
 	{
-						if (j == 0)
-						{
-							uint8_t buff = colorCounter;
-							if (buff > 8)	buff = 0;
-							for (uint8_t i = 0; i < 7; i++)
-							{
-								m_Cubes[j].colors[i] = m_colors[buff];
-							}
-						}
-						if (j == 1)
-						{
-							uint8_t buff = colorCounter + 1;
-							if (buff > 8)	buff = 1;
-							for (uint8_t i = 0; i < 7; i++)
-							{
-								m_Cubes[j].colors[i] = m_colors[buff];
-							}
-						}
-						if (j == 2)
-						{
-							uint8_t buff = colorCounter + 2;
-							if (buff > 8)	buff = 2;
-							for (uint8_t i = 0; i < 7; i++)
-							{
-								m_Cubes[j].colors[i] = m_colors[buff];
-							}
-						}
-						if (j == 3)
-						{
-							uint8_t buff = colorCounter + 3;
-							if (buff > 8)	buff = 3;
-							for (uint8_t i = 0; i < 7; i++)
-							{
-								m_Cubes[j].colors[i] = m_colors[buff];
-							}
-						}
+		if (j == 0)
+		{
+			uint8_t buff = colorCounter;
+			if (buff > 8)	buff = 0;
+			for (uint8_t i = 0; i < 7; i++)
+			{
+				m_Cubes[j].colors[i] = m_colors[buff];
+			}
+		}
+		if (j == 1)
+		{
+			uint8_t buff = colorCounter + 1;
+			if (buff > 8)	buff = 1;
+			for (uint8_t i = 0; i < 7; i++)
+			{
+				m_Cubes[j].colors[i] = m_colors[buff];
+			}
+		}
+		if (j == 2)
+		{
+			uint8_t buff = colorCounter + 2;
+			if (buff > 8)	buff = 2;
+			for (uint8_t i = 0; i < 7; i++)
+			{
+				m_Cubes[j].colors[i] = m_colors[buff];
+			}
+		}
+		if (j == 3)
+		{
+			uint8_t buff = colorCounter + 3;
+			if (buff > 8)	buff = 3;
+			for (uint8_t i = 0; i < 7; i++)
+			{
+				m_Cubes[j].colors[i] = m_colors[buff];
+			}
+		}
 	}
 	colorCounter ++;
 }
