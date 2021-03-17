@@ -28,9 +28,11 @@ int colorCounter;
 static uint32_t m_lastTick;
 static uint8_t m_isActive;
 static int xAxis, yAxis, zAxis;
+bool isShowing = 0;
 
 
-static const uint32_t m_colors[CUBE_VERTEX_COUNT] = {
+static const uint32_t m_colors[CUBE_VERTEX_COUNT] =
+{
 		0xFFFF0000, // RED
 		0xFF00FF00, // GREEN
 		0xFF0000FF, // BLUE
@@ -41,21 +43,25 @@ static const uint32_t m_colors[CUBE_VERTEX_COUNT] = {
 		0xFFFFA500  // ORANGE
 };
 
-static inline float GetRandomFloat() {
+static inline float GetRandomFloat()
+{
 	return ((float)rand()) / RAND_MAX;
 }
 
-static inline float GetRandomFloatRange(float a_min, float b_max) {
+static inline float GetRandomFloatRange(float a_min, float b_max)
+{
 	return a_min + (GetRandomFloat()) * (b_max - a_min);
 }
 
-static void GetRandomTranslation(vec3 tr) {
+static void GetRandomTranslation(vec3 tr)
+{
 	tr[0] = GetRandomFloatRange(-2.0f, 3.0f);
 	tr[1] = GetRandomFloatRange(-1.5f, 0.0f);
 	tr[2] = GetRandomFloatRange(-1.0f, 1.0f);
 }
 
-static void GetRandomRotation(quat rot) {
+static void GetRandomRotation(quat rot)
+{
 	vec3 axis;
 	axis[0] = GetRandomFloatRange(-1, 1);
 	axis[1] = GetRandomFloatRange(-1, 1);
@@ -64,7 +70,8 @@ static void GetRandomRotation(quat rot) {
 	quat_rotate(rot, angle_rads, axis);
 }
 
-void CubeRotationAnim_Init(const Camera* camera) {
+void CubeRotationAnim_Init(const Camera* camera)
+{
 	srand(1U);
 
 	m_Camera = camera;
@@ -74,7 +81,7 @@ void CubeRotationAnim_Init(const Camera* camera) {
 
 	for (i = 0; i < ROTANIM_CUBE_CNT; i++)
 	{
-		float scale = GetRandomFloatRange(0.1f, 0.4f);
+		float scale = GetRandomFloatRange(0.1f, 0.2f);
 		OpenGL_Cube_Init(&m_Cubes[i], scale);
 
 		quat rot;
@@ -89,55 +96,64 @@ void CubeRotationAnim_Init(const Camera* camera) {
 	m_lastTick = HAL_GetTick();
 }
 
-void CubeRotationAnim_Pause() {
+void CubeRotationAnim_Pause()
+{
 	m_isActive = 0;
 }
+
 char buf[64];
-char buf1[64];
-char buf2[64];
 float data[3];
 int x = 0;
 int y = 0;
 int z = 0;
 
-
-void CubeRotationAnim_Resume() {
-	if (!m_isActive) {
+void CubeRotationAnim_Resume()
+{
+	if (!m_isActive)
+	{
 		FrameHandler_Reset();
 		m_isActive = 1;
 	}
 	quat q;
 	uint32_t curr = HAL_GetTick();
 
+	if (isShowing == 1)
+	{
+		snprintf(buf, sizeof buf, "400dpi");
+			BSP_LCD_DisplayStringAt(0, 300,(uint8_t *)buf,LEFT_MODE);
+			snprintf(buf, sizeof buf, "800");
+			BSP_LCD_DisplayStringAt(0, 117,(uint8_t *)buf,LEFT_MODE);
+			snprintf(buf, sizeof buf, "1600");
+			BSP_LCD_DisplayStringAt(0, 170,(uint8_t *)buf,LEFT_MODE);
+			snprintf(buf, sizeof buf, "2400");
+			BSP_LCD_DisplayStringAt(180, 220,(uint8_t *)buf,LEFT_MODE);
+
+			snprintf(buf, sizeof buf, "X %d", xAxis);
+			BSP_LCD_DisplayStringAt(0,30,(uint8_t *)buf,LEFT_MODE);
+			snprintf(buf, sizeof buf, "Y %d", yAxis);
+			BSP_LCD_DisplayStringAt(0,50,(uint8_t *)buf,LEFT_MODE);
+			snprintf(buf, sizeof buf, "Z %d", zAxis);
+			BSP_LCD_DisplayStringAt(0,70,(uint8_t *)buf,LEFT_MODE);
+
+			snprintf(buf, sizeof buf, "X %d", xDiff);
+			BSP_LCD_DisplayStringAt(100,30,(uint8_t *)buf,LEFT_MODE);
+			snprintf(buf, sizeof buf, "Y %d", yDiff);
+			BSP_LCD_DisplayStringAt(100,50,(uint8_t *)buf,LEFT_MODE);
+			snprintf(buf, sizeof buf, "Z %d", zDiff);
+			BSP_LCD_DisplayStringAt(100,70,(uint8_t *)buf,LEFT_MODE);
+	}
 	BSP_GYRO_GetXYZ(data);
 
 	xAxis += (int)data[0]/10000;
 	yAxis += (int)data[1]/10000;
 	zAxis += (int)data[2]/10000;
 
-	snprintf(buf, sizeof buf, "X %d", xAxis);
-    snprintf(buf1, sizeof buf1, "Y %d", yAxis);
-	snprintf(buf2, sizeof buf2, "Z %d", zAxis);
-
-	BSP_LCD_DisplayStringAt(0,30,(uint8_t *)buf,LEFT_MODE);
-	BSP_LCD_DisplayStringAt(0,50,(uint8_t *)buf1,LEFT_MODE);
-	BSP_LCD_DisplayStringAt(0,70,(uint8_t *)buf2,LEFT_MODE);
-
 	xDiff = xAxis - xOld;
 	yDiff = yAxis - yOld;
 	zDiff = zAxis - zOld;
 
-	snprintf(buf, sizeof buf, "X %d", xDiff);
-    snprintf(buf1, sizeof buf1, "Y %d", yDiff);
-	snprintf(buf2, sizeof buf2, "Z %d", zDiff);
-
-	BSP_LCD_DisplayStringAt(100,30,(uint8_t *)buf,LEFT_MODE);
-	BSP_LCD_DisplayStringAt(100,50,(uint8_t *)buf1,LEFT_MODE);
-	BSP_LCD_DisplayStringAt(100,70,(uint8_t *)buf2,LEFT_MODE);
-
 	float turned;
 	float angle_rads;
-
 
 	if ((xDiff > 1) | (xDiff < -1))
 	{
@@ -236,7 +252,6 @@ void CubeRotationAnim_Resume() {
 	{
 		FrameHandler_DrawCube(m_Camera, &m_Cubes[i]);
 	}
-
 	FrameHandler_glFlush();
 	m_lastTick = curr;
 }
@@ -295,4 +310,8 @@ void CubeRotationAnim_SetNextColor()
 						}
 	}
 	colorCounter ++;
+}
+void CubeRotationAnim_ShowStat()
+{
+	isShowing = !isShowing;
 }

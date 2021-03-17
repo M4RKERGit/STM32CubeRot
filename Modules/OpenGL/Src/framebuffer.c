@@ -99,6 +99,3 @@ void FrameBuffer_DrawCube(FrameBuffer* frame, const Camera* camera, const Cube* 
 		FrameBuffer_ProjectTrian4(frame, trian, vcolors, mvp);
 	}
 }
-
-
-
