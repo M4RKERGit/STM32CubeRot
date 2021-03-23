@@ -60,6 +60,8 @@
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 #define DEPTH_SDRAM_START_ADRRES (LCD_FRAME_BUFFER + 2 * BUFFER_OFFSET)
+#define ALT_KEY			GPIO_PIN_14
+#define CUSTOM_SW_KEY	GPIO_PIN_5
 
 /* USER CODE END PM */
 
@@ -70,7 +72,7 @@ extern SDRAM_HandleTypeDef hsdram2;
 static __IO uint8_t m_DemoId = 0;
 
 cOpenGL_DemoTypedef cOpenGL_Examples[] = {
-	{CubeRotationAnim_Resume,  CubeRotationAnim_Pause, CubeRotationAnim_SetNextColor},
+	{CubeRotationAnim_Resume,  CubeRotationAnim_Pause, CubeRotationAnim_SetNextColor, CubeRotationAnim_ShowStat},
 	{CubeTouchMe_Resume,       CubeTouchMe_Pause},
 };
 /* USER CODE END PV */
@@ -172,7 +174,14 @@ int main(void)
   while (1)
   {
 	  cOpenGL_Examples[m_DemoId].Resume();
-
+	  if (GPIO_PIN_RESET == HAL_GPIO_ReadPin (GPIOC, ALT_KEY))
+	  {
+		  cOpenGL_Examples[m_DemoId].ShowStat();
+	  }
+	  if (GPIO_PIN_RESET == HAL_GPIO_ReadPin (GPIOE, CUSTOM_SW_KEY))
+	  {
+		  cOpenGL_Examples[m_DemoId].SetNextColor();
+	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -245,10 +254,11 @@ void SystemClock_Config(void)
   * @param  GPIO_Pin: Specifies the pins connected EXTI line
   * @retval None
   */
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-	if (GPIO_Pin == KEY_BUTTON_PIN) {
-		cOpenGL_Examples[m_DemoId].SetNextColor();
-		//m_DemoId = (m_DemoId + 1) % (sizeof(cOpenGL_Examples) / sizeof(cOpenGL_Examples[0]));
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	if (GPIO_Pin == KEY_BUTTON_PIN)
+	{
+		m_DemoId = (m_DemoId + 1) % (sizeof(cOpenGL_Examples) / sizeof(cOpenGL_Examples[0]));
 	}
 }
 

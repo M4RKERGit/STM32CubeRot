@@ -12,7 +12,7 @@
 #include "depth_sdram.h"
 #include "opengl.h"
 
-#define FRAME_CLEAR_COLOR  LCD_COLOR_LIGHTGRAY
+#define FRAME_CLEAR_COLOR  LCD_COLOR_LIGHTGRAY	//заливка фрейма, желательно оставить серую
 
 static void FrameBuffer_ProjectNdcPointToScreen(const FrameBuffer* frame, vec3 screen, vec4 ndc) {
 	screen[0] = (ndc[0] + 1) / 2.0 * frame->width;

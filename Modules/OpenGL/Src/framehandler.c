@@ -13,6 +13,7 @@
 #include "opengl.h"
 #include "framehandler.h"
 #include "framebuffer.h"
+#include <Demo.h>
 
 extern void OpenGL_AssertCube(const Cube* cube);
 
@@ -30,8 +31,11 @@ static void FrameHandler_DisplayFPS() {
 		m_first_flush_timestamp = HAL_GetTick();
 	} else {
 		float fps = 1000.f * m_flushes / (HAL_GetTick() - m_first_flush_timestamp);
-		sprintf(m_fps_info_str, "FPS %.2f", fps);
-		BSP_LCD_DisplayStringAtLine(0, (uint8_t*)m_fps_info_str);
+		sprintf(m_fps_info_str, "FPS %.0f", fps);
+		if (isShowing == 0)
+		{
+			BSP_LCD_DisplayStringAtLine(0, (uint8_t*)m_fps_info_str);
+		}
 	}
 	m_flushes++;
 }
